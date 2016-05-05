@@ -1,0 +1,48 @@
+@(username: String)
+
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Twitzer 2.0 - History</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/history.css")">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/slate/bootstrap.min.css" crossorigin="anonymous">
+    
+        <!--JQuery pulldown -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    </head>
+
+    <body>
+        <h3 id="title"> History for user with this username: @username </h3>
+
+        <div class="container" id="searchDiv">
+            @helper.form(action = routes.Application.home, 'id -> "playForm") {
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="searchDiv" type="submit"> Go to Search </button>
+                </div>
+            }
+        </div>
+
+        <div class="container" id="logoutDiv">
+            @helper.form(action = routes.Application.logout, 'id -> "playForm") {
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="historyBtn" type="submit"> Logout </button>
+                </div>
+            }
+        </div>
+
+        <footer>
+            <p> Twitzer 2.0 </p>
+        </footer>
+
+        
+    </body>
+</html>

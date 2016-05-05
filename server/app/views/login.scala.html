@@ -1,0 +1,52 @@
+@(userForm: Form[User])
+
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Twitzer 2.0 - Login</title>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/slate/bootstrap.min.css" crossorigin="anonymous">
+    
+        <!--JQuery pulldown -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    </head>
+
+    <body>
+        <h3 id="title"> Login </h3>
+      
+        <div class="well bs-component" id="signin-form-well">
+            @helper.form(action = routes.Application.verifyLogin, 'id -> "playForm") {
+                @helper.inputText(userForm("username"))
+                @helper.inputPassword(userForm("password"))
+                <div class="form-actions">
+    			    <button class="btn btn-primary" id="loginButton" type="submit">Sign In</button>
+    		    </div>
+            }
+        </div>
+            
+        <div class="container" id="newUserDiv">
+            <p> Or create a new account: </p>
+            @helper.form(action = routes.Application.createUser, 'id -> "playForm") {
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="newUserButton" type="submit"> >> </button>
+                </div>
+            }
+        </div>
+
+        <br><br>
+
+        <footer>
+            <p> Twitzer 2.0 </p>
+        </footer>
+    </body>
+</html>

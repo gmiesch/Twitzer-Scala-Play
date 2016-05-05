@@ -1,0 +1,18 @@
+package models
+
+import javax.inject._
+import play.api._
+import play.api.mvc._
+import play.api.db.slick.DatabaseConfigProvider
+import slick.driver.JdbcProfile
+import slick.driver.MySQLDriver.api._
+import scala.concurrent.Future
+
+class Users(tag: Tag) extends Table[User](tag, "Twitzer_2_User") {
+
+	val username: Rep[String] = column[String]("username", O.Length(50, varying=true))
+	val password: Rep[String] = column[String]("password", O.Length(50, varying=true))
+
+	def * = (username, password) <> (User.tupled, User.unapply)
+
+}

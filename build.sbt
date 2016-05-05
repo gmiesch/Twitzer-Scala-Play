@@ -10,9 +10,13 @@ lazy val server = (project in file("server")).settings(
   resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
   libraryDependencies ++= Seq(
     "com.vmunier" %% "play-scalajs-scripts" % "0.5.0",
-    "org.webjars" % "jquery" % "1.11.1",
+    jdbc,
+	  "com.typesafe.play" %% "play-slick" % "2.0.0",
+  	"mysql" % "mysql-connector-java" % "5.1.36",
+		"org.webjars" % "jquery" % "1.11.1",
     specs2 % Test
   ),
+	PlayKeys.devSettings := Seq("play.server.http.port" -> "9143"),
   // Heroku specific
   herokuAppName in Compile := "your-heroku-app-name",
   herokuSkipSubProjects in Compile := false

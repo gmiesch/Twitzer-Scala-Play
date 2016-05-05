@@ -1,0 +1,12 @@
+@(username: String)(implicit environment: play.api.Environment)
+
+@main("Twitzer 2.0 - Results") {
+<h3>Results for the search from user: @username</h3>
+
+<p>Scala.js shouts out: <em id="scalajsShoutOut"></em></p>
+
+<footer>
+  <p> Twitzer 2.0 </p>
+</footer>
+}
+
