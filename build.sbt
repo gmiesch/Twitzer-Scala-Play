@@ -11,9 +11,14 @@ lazy val server = (project in file("server")).settings(
   libraryDependencies ++= Seq(
     "com.vmunier" %% "play-scalajs-scripts" % "0.5.0",
     jdbc,
-	  "com.typesafe.play" %% "play-slick" % "2.0.0",
-  	"mysql" % "mysql-connector-java" % "5.1.36",
-		"org.webjars" % "jquery" % "1.11.1",
+    "oauth.signpost" % "signpost-core" % "1.2",
+    "oauth.signpost" % "signpost-commonshttp4" % "1.2",
+    "org.apache.httpcomponents" % "httpclient" % "4.2",
+    "org.apache.httpcomponents" % "httpcore" % "4.2",
+    "commons-io" % "commons-io" % "2.4",
+    "com.typesafe.play" %% "play-slick" % "2.0.0",
+    "mysql" % "mysql-connector-java" % "5.1.36",
+    "org.webjars" % "jquery" % "1.11.1",
     specs2 % Test
   ),
 	PlayKeys.devSettings := Seq("play.server.http.port" -> "9143"),

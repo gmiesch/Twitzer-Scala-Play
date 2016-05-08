@@ -2,6 +2,7 @@ package controllers
 
 import play.api._
 import play.api.mvc._
+import play.api.libs.json._
 import shared.SharedMessages
 
 import javax.inject._
@@ -17,11 +18,19 @@ import play.api.data.Forms._
 import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import org.apache.http.client.HttpClient
+import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.client.methods.HttpGet
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer
+import org.apache.commons.io._
 
 import play.api.mvc.Session
 
 class Application @Inject()(implicit environment: Environment, dbConfigProvider: DatabaseConfigProvider) extends Controller {
 
+
+	val ConsumerKey = "XXXXXXXXXXXXXXXXXXX"
+	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	val dbConfig = dbConfigProvider.get[JdbcProfile]
 
 	var session = new Session()
@@ -37,6 +46,15 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
 		mapping(
 			"twitterUsername" -> nonEmptyText,
 			"numTweets" -> number)(Search.apply)(Search.unapply))
+
+  def countWords(allWords : String) : List[(String, Int)] = {
+      val wordMap = scala.collection.mutable.Map[String, Int]().withDefaultValue(0)
+      for (word <- allWords.split(" ")) {
+          // TODO filter words
+          wordMap.update(word, wordMap(word) + 1)
+      }
+      wordMap.toList.sortWith(_._2 > _._2)
+  }
 
   def index = Action {
     Ok(views.html.login(userForm))
@@ -98,9 +116,17 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
         Future { Ok(views.html.home(user, formWithErrors)) }
       },
       search => {
-        	//HIT TWITTER API
-					//CAMPBELL PLS
-        	Future { Ok("Search results were: " + search.twitterUsername + ", " + search.numTweets) }
+		val consumer = new CommonsHttpOAuthConsumer(ConsumerKey,ConsumerSecret);
+                // TODO more than 200 tweets?
+		val count = Math.min(200, search.numTweets)
+     		val request = new HttpGet("https://api.twitter.com/1.1/statuses/user_timeline.json?count=" + count + "&screen_name=" + search.twitterUsername);
+		consumer.sign(request);
+     		val client = new DefaultHttpClient();
+     		val response = client.execute(request);
+ 
+    		val json = Json.parse(IOUtils.toString(response.getEntity().getContent()))
+    		val allwords = (json \\ "text").map(e => e.toString.replace("\"", "").replaceAll("[^a-zA-Z ]", "")).mkString(" ").toLowerCase
+        	Future { Ok(countWords(allwords).mkString(" ")) }
       })
   	})
 
