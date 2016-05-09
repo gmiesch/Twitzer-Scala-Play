@@ -53,6 +53,7 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
           // TODO filter words
           wordMap.update(word, wordMap(word) + 1)
       }
+      wordMap -= ""
       wordMap.toList.sortWith(_._2 > _._2)
   }
 
