@@ -29,8 +29,8 @@ import play.api.mvc.Session
 class Application @Inject()(implicit environment: Environment, dbConfigProvider: DatabaseConfigProvider) extends Controller {
 
 
-	val ConsumerKey = "XXXXXXXXXXXXXXXXXXX"
-	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	val ConsumerKey = "XXXXXXXXXXXXXXXXXXXXXX"
+	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	val dbConfig = dbConfigProvider.get[JdbcProfile]
 
 	var session = new Session()
@@ -117,16 +117,32 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
       },
       search => {
 		val consumer = new CommonsHttpOAuthConsumer(ConsumerKey,ConsumerSecret);
-                // TODO more than 200 tweets?
-		val count = Math.min(200, search.numTweets)
-     		val request = new HttpGet("https://api.twitter.com/1.1/statuses/user_timeline.json?count=" + count + "&screen_name=" + search.twitterUsername);
-		consumer.sign(request);
-     		val client = new DefaultHttpClient();
-     		val response = client.execute(request);
- 
-    		val json = Json.parse(IOUtils.toString(response.getEntity().getContent()))
-    		val allwords = (json \\ "text").map(e => e.toString.replace("\"", "").replaceAll("[^a-zA-Z ]", "")).mkString(" ").toLowerCase
-        	Future { Ok(countWords(allwords).mkString(" ")) }
+		val stringy = StringBuilder.newBuilder
+		var count = Math.min(3200, search.numTweets)
+		var maxID : Long = -1
+		val iters = if (count % 200 == 0) count / 200 else count / 200 + 1
+		for (i <- 0 until iters) {
+			val thisCount = Math.min(200, count)
+			count -= thisCount
+			println("Consuming " + thisCount + ", " + count + " remaining")
+			val requestBuilder = StringBuilder.newBuilder
+			requestBuilder.append("https://api.twitter.com/1.1/statuses/user_timeline.json?count=" + thisCount + "&screen_name=" + search.twitterUsername)
+			if (maxID != -1) requestBuilder.append("&max_id=" + maxID)
+			println(requestBuilder.toString)
+			val request = new HttpGet(requestBuilder.toString);
+			consumer.sign(request);
+     			val client = new DefaultHttpClient();
+     			val response = client.execute(request);
+    			val json = Json.parse(IOUtils.toString(response.getEntity().getContent()))
+    			stringy.append((json \\ "text").map(e => e.toString.replace("\"", "").replaceAll("[^a-zA-Z ]", "")).mkString(" ").toLowerCase)
+			val jsid = json.last \ "id"
+			jsid match {
+  				case JsDefined(v) => maxID = v.toString.toLong
+  				case undefined: JsUndefined => println(undefined.validationError)
+			}
+			println(maxID)
+		}
+        	Future { Ok(countWords(stringy.toString).mkString(" ")) }
       })
   	})
 
