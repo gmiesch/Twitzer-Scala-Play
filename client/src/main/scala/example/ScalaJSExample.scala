@@ -41,10 +41,6 @@ object ScalaJSExample extends js.JSApp {
 	
 	sample = sample.filter(s => !common.contains(s._1))
 
-	sample = sample.sortWith(_._2 > _._2)
-
-	sample = sample.take(250)
-
 	var inMin:Int = sample(sample.length-1)._2
 	var inMax:Int = sample(0)._2
 	var outMin:Int = 0
@@ -64,14 +60,11 @@ object ScalaJSExample extends js.JSApp {
 	}
 
 	def display(rect:Rect):Unit = {
-		//this is so fucked
-		//deal with length
-		//not to flacked
 		val color:String = "rgb(" + rect.fontColor.toString + "," + rect.fontColor.toString + "," +  rect.fontColor.toString  + ")"
 		//println(color)
-        renderer.fillStyle = color
-        renderer.font = rect.fontSize.toString + "px sans-serif"
-        renderer.fillText(rect.text, rect.x-(rect.w/2.0), rect.y+(rect.h/2.0))
+        	renderer.fillStyle = color
+       		renderer.font = rect.fontSize.toString + "px sans-serif"
+        	renderer.fillText(rect.text, rect.x-(rect.w/2.0), rect.y+(rect.h/2.0))
 		/*renderer.beginPath()
 		renderer.fillStyle = "red"
 		renderer.arc(rect.x, rect.y, 5, 0, 2*Math.PI, false)
@@ -188,18 +181,5 @@ object ScalaJSExample extends js.JSApp {
 		placed.append(curRect)
 		rects.remove(0)
 	}
-	
-	//renderer.beginPath()
-	//renderer.arc(canvas.width/2.0, canvas.height/2.0, 10, 0, 2*Math.PI, false)
-	//renderer.stroke()
-	//renderer.fill()
-	//renderer.closePath()
-
-
-
-
-
-
-
   }
 }

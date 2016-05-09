@@ -10,6 +10,31 @@
 <canvas id="canvas"> </canvas>
 
 
+        <div class="container" id="searchDiv">
+            @helper.form(action = routes.Application.saveWordCloud(username), 'id -> "playForm") {
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="searchDiv" type="submit"> Save to History </button>
+                </div>
+            }
+        </div>
+
+        <div class="container" id="searchDiv">
+            @helper.form(action = routes.Application.home, 'id -> "playForm") {
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="searchDiv" type="submit"> Go to Search </button>
+                </div>
+            }
+        </div>
+
+        <div class="container" id="logoutDiv">
+            @helper.form(action = routes.Application.logout, 'id -> "playForm") {
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="historyBtn" type="submit"> Logout </button>
+                </div>
+            }
+        </div>
+
+
 <footer>
   <p> Twitzer 2.0 </p>
 </footer>

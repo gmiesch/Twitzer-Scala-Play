@@ -29,13 +29,14 @@ import play.api.mvc.Session
 class Application @Inject()(implicit environment: Environment, dbConfigProvider: DatabaseConfigProvider) extends Controller {
 
 
-	val ConsumerKey = "XXXXXXXXXXXXXXXXXXX"
-	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	val ConsumerKey = "XXXXXXXXXXXXXXXXXXXX"
+	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	val dbConfig = dbConfigProvider.get[JdbcProfile]
 
 	var session = new Session()
 
 	lazy val Users = new TableQuery(tag => new Users(tag))
+	lazy val Historys = new TableQuery(tag => new Historys(tag))
 
 	val userForm = Form(
 		mapping(
@@ -71,7 +72,7 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
         Queries.validLogin(user, db).flatMap(_ match {
         	case -1 => Future(Redirect(routes.Application.index))
         	case 1 => {
-						session = session + ("username" -> user.username)
+			session = session + ("username" -> user.username)
         		Future(Redirect(routes.Application.home))
         	}
         })
@@ -113,8 +114,8 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
   def searchResults = Action.async(implicit request => {
     searchForm.bindFromRequest().fold(
       formWithErrors => {
-				var user:String = session.get("username").get
-        Future { Ok(views.html.home(user, formWithErrors)) }
+		var user:String = session.get("username").get
+      		Future { Ok(views.html.home(user, formWithErrors)) }
       },
       search => {
 		val consumer = new CommonsHttpOAuthConsumer(ConsumerKey,ConsumerSecret);
@@ -144,17 +145,46 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
 			println(maxID)
 		}
 		var user:String = session.get("username").get
-        	Future { Ok(views.html.results(user, countWords(stringy.toString).mkString("-"))) }
+		session = session + (s"$user - tweetUsername" -> search.twitterUsername)
+		session = session + (s"$user - numTweets" -> search.numTweets.toString)
+		session = session + (s"$user - json" -> (countWords(stringy.toString).take(250).mkString("-")))
+        	Future { Ok(views.html.results(user, countWords(stringy.toString).take(250).mkString("-"))) }
       })
   	})
 
+  def getHistory(id:Int) = Action {
+	val futureHistory:Future[Seq[models.History]] = dbConfig.db.run(Historys.filter(_.id === id).result)
+	val lst:Future[List[String]] = futureHistory.map(x => x.map(y => (y.json)).toList)
+	val result = Await.result(lst, 2e+9 nanos)
+
+	var user:String = session.get("username").get
+	Ok(views.html.results(user, result.mkString("-")))
+  }
+
   def history = Action {
-		var user:String = session.get("username").get
-		Ok(views.html.history(user))
+	var user:String = session.get("username").get
+
+	val futureHistory:Future[Seq[models.History]] = dbConfig.db.run(Historys.filter(_.owner === user).result)
+	val lst:Future[List[(Int, String, Int, String)]] = futureHistory.map(x => x.map(y => (y.id, y.tweetUsername, y.numTweets, y.json)).toList)
+	val result = Await.result(lst, 2e+9 nanos)
+
+	Ok(views.html.history(user, result))
   }
 
   def results(user:String, json:String) = Action {
-		Ok(views.html.results(user, json))
+	Ok(views.html.results(user, json))
+  }
+
+  def saveWordCloud(user:String) = Action {
+	var tweetUsername:String = session.get(s"$user - tweetUsername").get
+	var numTweets:Int = session.get(s"$user - numTweets").get.toInt
+	var json:String = session.get(s"$user - json").get
+
+	val db = dbConfig.db
+
+	db.run(Historys += History(0, user, tweetUsername, numTweets, json))
+	
+	Ok(views.html.home(user,searchForm))
   }
 
 }

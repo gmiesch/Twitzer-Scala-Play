@@ -15,8 +15,10 @@ POST	/home			    controllers.Application.searchResults
 GET	/logout			    controllers.Application.logout
 
 GET	/history		    controllers.Application.history
+POST	/history		    controllers.Application.getHistory(id:Int)
 
 GET	/results		    controllers.Application.results(user:String, json:String)
+POST	/results		    controllers.Application.saveWordCloud(user:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
