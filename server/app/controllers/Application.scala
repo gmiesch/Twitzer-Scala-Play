@@ -29,8 +29,8 @@ import play.api.mvc.Session
 class Application @Inject()(implicit environment: Environment, dbConfigProvider: DatabaseConfigProvider) extends Controller {
 
 
-	val ConsumerKey = "XXXXXXXXXXXXXXXXXXXXXX"
-	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	val ConsumerKey = "XXXXXXXXXXXXXXXXXXX"
+	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	val dbConfig = dbConfigProvider.get[JdbcProfile]
 
 	var session = new Session()
@@ -143,7 +143,8 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
 			}
 			println(maxID)
 		}
-        	Future { Ok(countWords(stringy.toString).mkString(" ")) }
+		var user:String = session.get("username").get
+        	Future { Ok(views.html.results(user, countWords(stringy.toString).mkString("-"))) }
       })
   	})
 
@@ -152,10 +153,8 @@ class Application @Inject()(implicit environment: Environment, dbConfigProvider:
 		Ok(views.html.history(user))
   }
 
-  def results = Action {
-		//var user:String = session.get("username").get
-		//Ok(views.html.results(user))
-		Ok(views.html.results("testingUsername"))
+  def results(user:String, json:String) = Action {
+		Ok(views.html.results(user, json))
   }
 
 }
