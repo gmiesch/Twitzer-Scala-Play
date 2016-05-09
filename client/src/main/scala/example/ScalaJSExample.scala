@@ -10,8 +10,6 @@ import scala.collection.mutable.Buffer
 
 object ScalaJSExample extends js.JSApp {
   def main(): Unit = {
-    dom.document.getElementById("scalajsShoutOut").textContent = "O shit waddup"
-
 	var text = dom.document.getElementById("json").innerHTML
 	text = text.drop(1)
 	var sample2:List[String] = text.split("-").toList
@@ -65,15 +63,6 @@ object ScalaJSExample extends js.JSApp {
         	renderer.fillStyle = color
        		renderer.font = rect.fontSize.toString + "px sans-serif"
         	renderer.fillText(rect.text, rect.x-(rect.w/2.0), rect.y+(rect.h/2.0))
-		/*renderer.beginPath()
-		renderer.fillStyle = "red"
-		renderer.arc(rect.x, rect.y, 5, 0, 2*Math.PI, false)
-		renderer.arc(rect.x-rect.w/2.0, rect.y, 5, 0, 2*Math.PI, false)
-		renderer.stroke()
-		renderer.fill()
-		renderer.closePath()
-		renderer.strokeRect(rect.x-(rect.w/2.0), rect.y-(rect.h/2.0), rect.w, rect.h)*/
-
 	}
 
 	def lerp(x:Int):Int = {
@@ -105,19 +94,14 @@ object ScalaJSExample extends js.JSApp {
 		val radius_y:Double = canvas.height/4.0
 		var radius:Double = 1
 		if(theta < Math.PI/2.0) {
-			//println("Here1")
 			radius = (canvas.width/2.0)/Math.cos(theta)
-			//println(s"Rad: $radius")
 		}
 		else if(theta > Math.PI/2.0 && theta < Math.PI) {
-			//println("Here2")
 			radius = (canvas.width/2.0)/Math.cos((Math.PI/2.0)-theta)
 		}
 		else if(theta > Math.PI && theta < (3*Math.PI)/2.0) {
-			//println("Here3")
 			radius = (canvas.width/2.0)/Math.cos(((3*Math.PI)/2.0)-theta)
 		} else {
-			//println("Here4")
 			radius = (canvas.width/2.0)/Math.cos(2*Math.PI-theta)
 		}
 
@@ -142,7 +126,6 @@ object ScalaJSExample extends js.JSApp {
 		renderer.font = fontSize.toString + "px sans-serif"
 		val measure = renderer.measureText(s._1)
 		val w:Double = measure.width
-		//get font width
 		rects.append(new Rect(x, y, w, w/5.0, s._1, fontColor, fontSize))
 	})
 

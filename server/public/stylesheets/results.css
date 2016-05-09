@@ -1,0 +1,25 @@
+#title {
+    text-align:center;
+}
+
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#canvas {
+  display: block;
+  margin: 50px auto;
+}
+
+#searchDiv {
+  text-align:center;
+}
+
+#logoutDiv {
+  text-align:center;
+}
+
+footer {
+    text-align: center;
+}

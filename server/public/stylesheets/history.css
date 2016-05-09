@@ -7,6 +7,20 @@ body {
   padding-bottom: 20px;
 }
 
+.table-responsive {
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+}
+
+#searchDiv {
+	text-align: center;
+}
+
+#logoutDiv {
+	text-align: center;
+}
+
 footer {
     text-align: center;
 }

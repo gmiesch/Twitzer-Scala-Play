@@ -18,6 +18,14 @@ body {
     border-radius: 4px;
 }
 
+#historyDiv {
+  text-align: center;
+}
+
+#logoutDiv {
+  text-align: center;
+}
+
 footer {
     text-align: center;
 }

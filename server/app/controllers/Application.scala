@@ -29,8 +29,8 @@ import play.api.mvc.Session
 class Application @Inject()(implicit environment: Environment, dbConfigProvider: DatabaseConfigProvider) extends Controller {
 
 
-	val ConsumerKey = "XXXXXXXXXXXXXXXXXXXX"
-	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	val ConsumerKey = "XXXXXXXXXXXXXXXXXX"
+	val ConsumerSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 	val dbConfig = dbConfigProvider.get[JdbcProfile]
 
 	var session = new Session()

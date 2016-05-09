@@ -1,9 +1,9 @@
 @(username: String, json:String)(implicit environment: play.api.Environment)
 
 @main("Twitzer 2.0 - Results") {
-<h3>Results for the search from user: @username</h3>
-
-<p>Scala.js shouts out: <em id="scalajsShoutOut"></em></p>
+<div class="container" id="title">
+	<h3>Results for the search from user: @username</h3>
+</div>
 
 <p style="display:none" id="json"> @json </p>
 
@@ -18,6 +18,8 @@
             }
         </div>
 
+	<br>
+
         <div class="container" id="searchDiv">
             @helper.form(action = routes.Application.home, 'id -> "playForm") {
                 <div class="form-actions">
@@ -25,6 +27,8 @@
                 </div>
             }
         </div>
+
+	<br>
 
         <div class="container" id="logoutDiv">
             @helper.form(action = routes.Application.logout, 'id -> "playForm") {
@@ -34,6 +38,7 @@
             }
         </div>
 
+	<br>
 
 <footer>
   <p> Twitzer 2.0 </p>

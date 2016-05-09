@@ -23,9 +23,10 @@
     <body>
         <h3 id="title"> History for user with this username: @username </h3>
 
-				<table border="1" id="historyTable">
+				<div class="table-responsive">
+        <table class="table table-hover table-striped" id="tasksTable">
 					<thead>
-						<tr>
+						<tr class="info">
 							<td id="headerCol"> Tweet Username </td>
 							<td id="headerCol"> Number of Tweets </td> 		
 							<td id="headerCol"> View Word Cloud </td> 
@@ -46,6 +47,7 @@
 						}
 					</tbody>
 				</table>
+				</div>
 
         <div class="container" id="searchDiv">
             @helper.form(action = routes.Application.home, 'id -> "playForm") {
@@ -55,6 +57,8 @@
             }
         </div>
 
+				<br>
+
         <div class="container" id="logoutDiv">
             @helper.form(action = routes.Application.logout, 'id -> "playForm") {
                 <div class="form-actions">
@@ -62,6 +66,8 @@
                 </div>
             }
         </div>
+
+				<br>
 
         <footer>
             <p> Twitzer 2.0 </p>
