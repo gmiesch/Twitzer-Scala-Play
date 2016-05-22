@@ -1,4 +1,4 @@
-# Twitzer2.0
+# Twitzer Scala Play
 
 How to run: 
 ```
